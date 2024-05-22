@@ -66,6 +66,7 @@ renderRGBAPipeToCanvas(stretchPipe(
 	myCanvas.height
 ), myCanvas);
 ```
+This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` will, for each pixel on the target canvas, read (x, y) from the `stretchPipe`, which will read an adjusted (x, y) from `heatMap`, which will read (x, y) from `thingPipe`, which will read (x, y) from `dataPipe`, which will `floor()` x and y and read and return the corresponding data from `grid.data`. `thingPipe` will read and return from `things` using that data as an index, `heatMap` will create and return pixel data using that `Thing`'s `score`, `stretchPipe` will will return that and `renderRGBAPipeToCanvas()` will draw it where it belongs.
 
 Of course, its real purpose is to explore the concept.
 
