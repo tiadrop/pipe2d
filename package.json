@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "ts-loader": "^9.5.1"
+  },
+  "version": "0.0.1",
+  "description": "A simple random access 2D transform pipeline interface",
+  "name": "pipe2d",
+  "scripts": {
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch"
+  }
+}

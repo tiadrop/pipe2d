@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es6",
+    "allowJs": true,
+    "strict": true
+  },
+  "files": ["lib/pipe2d.ts", "demo/src/main.ts"],
+}
