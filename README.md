@@ -17,19 +17,24 @@ We can chain this with other 'pipes' to transform that pixel data, and how it's 
 The refraction logic can be summarised as:
 
 ```ts
-const screenPipe: Pipe2D<RGBA> = {
+const cursorPipe: Pipe2D<RGBA> = {
 	width: canvas.width,
 	height: canvas.height,
 	get(x, y) {
 		const [
 			refractX,
 			refractY
-		] = refractionPipe.get(x + cursorX, y + cursorY);
-		return backgroundPipe.get(x + refractX, y + refractY);
+		] = refractionPipe.get(x, y);
+		return backgroundPipe.get(
+			x + refractX + cursorX,
+			y + refractY + cursorY
+		);
 	}
 }
 
-const render = () => renderRGBAPipeToCanvas(screenPipe, myCanvas);
+// to draw:
+cursorCanvas.getContext("2d")
+	.drawImage(renderRGBAPipeToCanvas(cursorPipe));
 ```
 With such a unified interface we can easily swap pipes around and apply general transforms such as `scalePipe(source)`, `rotatePipe(source, direction)` and many more.
 
@@ -50,7 +55,7 @@ const thingPipe: Pipe2D<Thing> = {
 // let's visualise our nice new Thing grid with a heatmap of thing.score:
 const heatMap = mapPipe(thingPipe, thing => rgba(thing.score / maxScore, 0, 0, 1)); // Pipe2D<RGBA>
 // rendered to a canvas at 5x scale:
-renderPixelPipeToCanvas(scalePipe(heatMap, 5), myCanvas);
+renderRGBAPipeToCanvas(scalePipe(heatMap, 5), myCanvas);
 ```
 
 Of course, its real purpose is to explore the concept.
