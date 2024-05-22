@@ -45,11 +45,10 @@ const dataPipe = arrayPipeXY(grid.data, grid.width, grid.height, -1); // Pipe2D<
 const flipped = horizontalFlipPipe(dataPipe); // Pipe2D<number>
 const rotated = rotatePipe(flipped, "right"); // rotated.width == dataPipe.height &v/v
 // maybe the numbers in grid.data are indices for a Thing array?
-const thingPipe: Pipe2D<Thing> = {
-	width: dataPipe.width,
-	height: dataPipe.width,
-	get: (x, y) => things[dataPipe.get(x, y)];
-};
+const thingPipe = mapPipe(
+	dataPipe,
+	(x, y) => things[dataPipe.get(x, y)
+);
 
 // now we can grab a Thing from any position:
 const specificThing = thingPipe.get(13, 37);
