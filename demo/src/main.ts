@@ -40,9 +40,7 @@ const cursorCanvasContext = cursorCanvas.getContext("2d") as CanvasRenderingCont
 			// and the pixel from the cursor image
 			const cursorPixel = cursorImage.get(x, y);
 			// if there's no displacement here we may as well exit early
-			if (
-				(displaceX == 0 && displaceY == 0)
-			) return cursorPixel;
+			if (displaceX == 0 && displaceY == 0) return cursorPixel;
 			// adjust the background image to the current screen size
 			const backgroundPipe = stretchPipe(backgroundImagePipe, window.innerWidth, window.innerHeight)
 			// grab from backgroundPipe at the displaced coordinates
