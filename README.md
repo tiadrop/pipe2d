@@ -8,7 +8,7 @@ A simple random access 2D transform pipeline interface
 
 Inspired by [graphics shaders](https://en.wikipedia.org/wiki/Shader), Pipe2D provides a simple unified addressing interface for a transforming pipeline to any 2-dimensional concept.
 
-For example, `imagePipe(image)` creates an interface `get(x, y)` that samples the image at the given coordinates, with optional antialiasing for non-integral coordinates.
+For example, `imagePipe(image|canvas)` creates an interface `get(x, y)` that samples the image at the given coordinates, with optional antialiasing for non-integral coordinates.
 
 We can chain this with other 'pipes' to transform that pixel data, and how it's read. The following demo reads a displacement map from a pipeline and applies it to image sampling coordinates to create a refraction and magnification effect inside the mouse pointer:
 
@@ -22,8 +22,7 @@ const cursorPipe: Pipe2D<RGBA> = {
 	height: canvas.height,
 	get(x, y) {
 		const [
-			refractX,
-			refractY
+			refractX, refractY
 		] = refractionPipe.get(x, y);
 		return backgroundPipe.get(
 			x + refractX + cursorX,
