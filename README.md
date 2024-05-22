@@ -21,8 +21,8 @@ const screenPipe: Pipe2D<RGBA> = {
 	width: canvas.width,
 	height: canvas.height,
 	get(x, y) {
-		const [refractX, refractY] = refractionPipe.get(x - cursorX, y - cursorY);
-		return backgroundImagePipe.get(x + refractX, y + refractY);
+		const [refractX, refractY] = refractionPipe.get(x + cursorX, y + cursorY);
+		return backgroundPipe.get(x + refractX, y + refractY);
 	}
 }
 
