@@ -12,14 +12,14 @@ const cursorCanvasContext = cursorCanvas.getContext("2d") as CanvasRenderingCont
 	// this will be used to draw the background
 	const backgroundImagePipe = await imagePipe("bg.jpg");
 
-	// ie, create a (scaled) cursor image pipe
+	// create a (scaled) cursor image pipe
 	const cursorImage = scalePipe(
 		await imagePipe("cursor.png"),
 		cursorScale,
 	);
 
-	// create a pipe that reads from a pixel pipe (usually an image pipe) and returns [number, number], to use as a displacement map
-	// this pipe reads the displacement image's red channel to determine horizontal displacement and green for vertical.
+	// and a pipe that reads from a pixel pipe (usually an image pipe) and returns [number, number], to use as a displacement map
+	// this will read the displacement image's red channel to determine horizontal displacement and green for vertical
 	const cursorRefraction = createDisplacementMap(
 		scalePipe(
 			await imagePipe("cursor-disp.png"),
