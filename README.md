@@ -51,8 +51,14 @@ const thingPipe: Pipe2D<Thing> = {
 	get: (x, y) => things[dataPipe.get(x, y)];
 };
 
+// now we can grab a Thing from any position:
+const specificThing = thingPipe.get(13, 37);
+
 // let's visualise our nice new Thing grid with a heatmap of thing.score:
-const heatMap = mapPipe(thingPipe, thing => rgba(thing.score / maxScore, 0, 0, 1)); // Pipe2D<RGBA>
+const heatMap = mapPipe(
+	thingPipe,
+	thing => rgba(thing.score / maxScore, 0, 0, 1)
+); // Pipe2D<RGBA>
 // rendered to a canvas at 5x scale:
 renderRGBAPipeToCanvas(scalePipe(heatMap, 5), myCanvas);
 ```
