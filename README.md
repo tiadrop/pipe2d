@@ -14,8 +14,6 @@ We can chain this with other 'pipes' to transform that pixel data, and how it's 
 
 ### [[interactive demo](https://aleta.codes/pipe2d-demo/)] [[full demo source](./demo/src/main.ts)]
 
-Try using the pointer's magnifying lens to read the tiny numbers under the logo in the bottom right corner.
-
 The refraction logic can be summarised as:
 
 ```ts
