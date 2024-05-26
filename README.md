@@ -18,8 +18,8 @@ The refraction logic can be summarised as:
 
 ```ts
 const cursorPipe: Pipe2D<RGBA> = {
-	width: canvas.width,
-	height: canvas.height,
+	width: cursorCanvas.width,
+	height: cursorCanvas.height,
 	get(x, y) {
 		const [
 			refractX, refractY
@@ -33,7 +33,10 @@ const cursorPipe: Pipe2D<RGBA> = {
 
 // to draw:
 cursorCanvas.getContext("2d")
-	.drawImage(renderRGBAPipeToCanvas(cursorPipe));
+	.drawImage(
+		renderRGBAPipeToCanvas(cursorPipe),
+		0, 0
+	);
 ```
 With such a unified interface we can easily swap pipes around and apply general transforms such as `scalePipe(source)`, `rotatePipe(source, direction)` and many more.
 
