@@ -8,7 +8,7 @@ A simple random access 2D transform pipeline interface
 
 Inspired by [graphics shaders](https://en.wikipedia.org/wiki/Shader), Pipe2D provides a simple unified addressing interface for a transforming pipeline to any 2-dimensional concept.
 
-For example, `imagePipe(image|canvas)` creates an interface `get(x, y)` that samples the image at the given coordinates, with optional antialiasing for non-integral coordinates.
+For example, `imagePipe(image|canvas)` creates an interface `get(x, y)` that samples the image at the given coordinates, with optional interpolation for non-integral coordinates.
 
 We can chain this with other 'pipes' to transform that pixel data, and how it's read. The following demo reads a displacement map from a pipeline and applies it to image sampling coordinates to create a refraction and magnification effect inside the mouse pointer:
 
@@ -50,8 +50,8 @@ const rotated = rotatePipe(flipped, "right"); // rotated.width == dataPipe.heigh
 // maybe the numbers in grid.data are indices for a Thing array?
 const thingPipe = mapPipe(
 	dataPipe,
-	(x, y) => things[dataPipe.get(x, y)
-);
+	(x, y) => things[dataPipe.get(x, y)],
+); // Pipe2D<Thing>
 
 // now we can grab a Thing from any position:
 const specificThing = thingPipe.get(13, 37);
@@ -65,9 +65,9 @@ const heatMap = mapPipe(
 // stretched and rendered to a canvas:
 renderRGBAPipeToCanvas(stretchPipe(
 	heatMap,
-	myCanvas.width,
-	myCanvas.height
-), myCanvas);
+	heatmapCanvas.width,
+	heatmapCanvas.height
+), heatmapCanvas);
 ```
 This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` will, for each pixel on the target canvas, read (x, y) from the `stretchPipe`, which will read an adjusted (x, y) from `heatMap`, which will read (x, y) from `thingPipe`, which will read (x, y) from `dataPipe`, which will `floor()` x and y and read and return the corresponding data from `grid.data`. `thingPipe` will read and return from `things` using that data as an index, `heatMap` will create and return pixel data using that `Thing`'s `score`, `stretchPipe` will return that and `renderRGBAPipeToCanvas()` will draw it where it belongs.
 
