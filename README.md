@@ -50,7 +50,7 @@ const rotated = rotatePipe(flipped, "right"); // rotated.width == dataPipe.heigh
 // maybe the numbers in grid.data are indices for a Thing array?
 const thingPipe = mapPipe(
 	dataPipe,
-	(x, y) => things[dataPipe.get(x, y)],
+	idx => things[idx],
 ); // Pipe2D<Thing>
 
 // now we can grab a Thing from any position:
