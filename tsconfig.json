@@ -1,11 +1,24 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    "strict": true,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es6",
-    "allowJs": true,
-    "strict": true
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "moduleResolution": "nodenext",
+    "target": "ES2018",
+    "module": "NodeNext",
+    "removeComments": true,
+    "declaration": true,
   },
-  "files": ["lib/pipe2d.ts", "demo/src/main.ts"],
+  "include": ["lib/**/*.ts"],
+  "exclude": ["refraction-demo.ts"]
 }

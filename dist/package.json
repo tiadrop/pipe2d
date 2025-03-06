@@ -1,0 +1,16 @@
+{
+  "name": "@xtia/live-array",
+  "version": "1.0.2",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/tiadrop/pipe2d",
+    "type": "github"
+  },
+  "scripts": {
+    "prepublishOnly": "cp ../README.md .",
+    "postpublish": "rm README.md"
+  },
+  "description": "2D transform pipeline",
+  "author": "Aleta Lovelace",
+  "license": "MIT"
+}
