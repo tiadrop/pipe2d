@@ -159,11 +159,11 @@ export class Pipe2D<T> {
     }
 
     horizontalFlip() {
-        return this.mapCoordinates((x, y) => [this.width - x - 1, y]);
+        return this.mapCoordinates((x, y) => [this.width - x, y]);
     }
 
     verticalFlip() {
-        return this.mapCoordinates((x, y) => [x, this.height - y - 1]);
+        return this.mapCoordinates((x, y) => [x, this.height - y]);
     }
 
     rotate(direction: "left" | "right" | "over",): Pipe2D<T>
