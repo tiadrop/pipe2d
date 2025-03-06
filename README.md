@@ -37,8 +37,6 @@ function renderCursorBackground(cursorX: number, cursorY: number) {
 	return renderRGBAPipeToCanvas(cursorPipe);
 }
 ```
-With such a unified interface we can easily swap pipes around and apply general transforms such as `scalePipe(source)`, `rotatePipe(source, direction)` and many more.
-
 Pipe2D is not limited to graphics. We can just as easily apply such transformation to anything that's addressable in two dimensions:
 
 ```ts
