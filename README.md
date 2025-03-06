@@ -106,5 +106,5 @@ This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` w
 
 * `createImagePipe(source, options?)` creates a pipe that samples an image (`HTMLCanvasElement | HTMLImageElement | OffscreenCanvas | ImageData | Pipe2D<RGBA>` or 2D rendering context)
 * `async createImagePipe(url, options?)` loads an image from a URL and creates a a pipe that samples it
-* `renderRGBAPipeToCanvas(rgbaPipe, target?[, x, y[, dw, dh]])` renders a Pipe2D<RGBA> to a canvas/canvas context/imageData. If no target is specified, the function will create one, render to it and return it
+* `renderRGBAPipeToCanvas(rgbaPipe, target?[, x, y[, dw, dh]])` renders a Pipe2D<RGBA> to a canvas/canvas context/imageData. If no target is specified, the function will create a canvas with the pipes dimesions, render to it and return it
 
