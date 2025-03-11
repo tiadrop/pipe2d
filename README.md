@@ -29,11 +29,9 @@ function renderCursorBackground(cursorX: number, cursorY: number) {
 	// create a pipe to read background from refracted coordinates
 	const cursorPipe = backgroundPipe.mapCoordinates((x, y) => {
 		const [refractX, refractY] = refractionPipe.get(x, y);
-		return [
-			x + refractX + cursorX,
-			y + refractY + cursorY
-		]
-	});
+		return [x + refractX, y + refractYY];
+	}).crop(cursorX, cursorY, cursorPipe.width, cursorPipe.height);
+	// draw it on a canvas
 	return renderRGBAPipeToCanvas(cursorPipe);
 }
 ```
@@ -69,7 +67,7 @@ This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` w
 
 * `rows` contains a 2D [LiveArray](https://www.npmjs.com/package/@xtia/live-array) that reads the pipe as rows
 * `columns` contains a 2D [LiveArray](https://www.npmjs.com/package/@xtia/live-array) that reads the pipe as columns
-* `width` and `height` provide the pipe's dimesions
+* `width` and `height` provide the pipe's dimensions
 
 ## Methods
 
