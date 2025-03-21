@@ -247,10 +247,12 @@ export class Pipe2D<T> {
      * This method returns a new Pipe2D object where the coordinates are wrapped
      * around the width and height of the original Pipe2D instance.
      * 
+     * @param reportedWidth - The width reported by the new pipe
+     * @param reportedWidth - The height reported by the new pipe
      * @returns {Pipe2D<T>} A new Pipe2D instance with wrapped coordinates.
      */
-    loop(): Pipe2D<T> {
-        return new Pipe2D(this.width, this.height, (x, y) => {
+    loop(reportedWidth: number = this.width, reportedHeight: number = this.height): Pipe2D<T> {
+        return new Pipe2D(reportedWidth, reportedHeight, (x, y) => {
             const wrappedX = ((x % this.width) + this.width) % this.width;
             const wrappedY = ((y % this.height) + this.height) % this.height;
             return this.getter(wrappedX, wrappedY);
