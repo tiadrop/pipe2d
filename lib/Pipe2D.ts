@@ -7,11 +7,8 @@ import { Angle } from "@xtia/mezr";
  * @template T - The type of the elements in the 2D data structure.
  */
 export class Pipe2D<T> {
-    readonly width: number;
-    readonly height: number;
     readonly columns: LiveArray<LiveArray<T>>;
     readonly rows: LiveArray<LiveArray<T>>;
-    private getter: (x: number, y: number) => T;
 
     /**
      * Retrieves the value at the specified coordinates (x, y).
@@ -24,19 +21,15 @@ export class Pipe2D<T> {
     }
 
     constructor(
-        width: number,
-        height: number,
-        getter: (x: number, y: number) => T,
+        public readonly width: number,
+        public readonly height: number,
+        public readonly getter: (x: number, y: number) => T,
     ) {
-        this.width = width;
-        this.height = height;
-        this.getter = getter;
-
         this.rows = liveArray({
             getLength: () => this.height,
             get: rowIdx => liveArray({
                 getLength: () => this.width,
-                get: colIdx => this.get(colIdx, rowIdx),
+                get: colIdx => this.getter(colIdx, rowIdx),
             })
         });
 
@@ -44,7 +37,7 @@ export class Pipe2D<T> {
             getLength: () => this.width,
             get: colIdx => liveArray({
                 getLength: () => this.height,
-                get: rowIdx => this.get(colIdx, rowIdx),
+                get: rowIdx => this.getter(colIdx, rowIdx),
             })
         });
     }
@@ -175,13 +168,13 @@ export class Pipe2D<T> {
             directionOrAngle == "over" ? this.height : this.width,
             {
                 left: (x: number, y: number) => {
-                    return this.get(this.width - y - 1, x)
+                    return this.getter(this.width - y - 1, x)
                 },
                 right: (x: number, y: number) => {
-                    return this.get(y, this.height - x - 1)
+                    return this.getter(y, this.height - x - 1)
                 },
                 over: (x: number, y: number) => {
-                    return this.get(this.width - x - 1, this.height - y - 1);
+                    return this.getter(this.width - x - 1, this.height - y - 1);
                 }
             }[directionOrAngle]
         );
@@ -212,7 +205,7 @@ export class Pipe2D<T> {
                 if (srcX < 0 || srcX >= this.width || srcY < 0 || srcY >= this.height) {
                     return undefined as unknown as T;
                 }
-                return this.get(srcX, srcY);
+                return this.getter(srcX, srcY);
             }
         );
     }
@@ -243,7 +236,7 @@ export class Pipe2D<T> {
             (x, y) => {
                 const scaledX = x * ratioX;
                 const scaledY = y * ratioY;
-                return this.get(scaledX, scaledY);
+                return this.getter(scaledX, scaledY);
             },
         );
     }
@@ -438,7 +431,7 @@ export class Pipe2D<T> {
                         && x < right && y < bottom;
                 });
                 if (topSource === undefined) return fallback as T;
-                return topSource.pipe.get(x - topSource.x, y - topSource.y);
+                return topSource.pipe.getter(x - topSource.x, y - topSource.y);
             }
         );
     }
