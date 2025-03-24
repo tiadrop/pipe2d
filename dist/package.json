@@ -1,6 +1,6 @@
 {
   "name": "@xtia/pipe2d",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "lib/index.js",
   "repository": {
     "url": "https://github.com/tiadrop/pipe2d",
@@ -11,8 +11,7 @@
     "postpublish": "rm README.md"
   },
   "dependencies": {
-    "@xtia/live-array": "^1.0.2",
-    "@xtia/mezr": "^0.1.2"
+    "@xtia/live-array": "^1.0.2"
   },
   "description": "2D transform pipeline",
   "author": "Aleta Lovelace",

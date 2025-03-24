@@ -2,13 +2,13 @@
 
 ## Summary
 
-A simple random access 2D transform pipeline interface
+2D transformation pipelines
 
 ## Description
 
 Inspired by [graphics shaders](https://en.wikipedia.org/wiki/Shader), Pipe2D provides a simple unified addressing interface for a transforming pipeline to any 2-dimensional concept.
 
-For example, `imagePipe(image|canvas)` creates an interface `get(x, y)` that samples the image at the given coordinates, with optional interpolation for non-integral coordinates.
+For example, `createImagePipe(image|canvas)`, provided by `@xtia/pipe2d-image`, creates a Pipe2D that samples an image at the given coordinates, with optional interpolation for non-integral coordinates.
 
 We can chain this to transform that pixel data, and how it's read. The following demo reads a displacement map from a pipeline and applies it to image sampling coordinates to create a refraction and magnification effect inside the mouse pointer:
 
@@ -17,32 +17,37 @@ We can chain this to transform that pixel data, and how it's read. The following
 The refraction logic can be summarised as:
 
 ```ts
-import { Pipe2D, renderRGBAPipeToCanvas } from "@xtia/pipe2d";
+import { renderRGBAPipe, createImagePipe } from "@xtia/pipe2d-image";
+
+const refractionStrength = 10;
+const refractionImage = await createImagePipe("cursor-refraction-map.png");
 
 // read red and green channels as refraction offset
-const refractionPipe = getImagePipe(refractionImage).map(rgba => [
-	(rgba[0] / 255) - .5,
-	(rgba[1] / 255) - .5,
-]).map(v => v * refractionStrength);
+const refractionPipe = refractionImage.map(rgba => [
+	((rgba.red / 255) - .5) * refractionStrength,
+	((rgba.green / 255) - .5) * refractionStrength,
+]); // Pipe2D<[x, y]>
 
 function renderCursorBackground(cursorX: number, cursorY: number) {
 	// create a pipe to read background from refracted coordinates
 	const cursorPipe = backgroundPipe.mapCoordinates((x, y) => {
 		const [refractX, refractY] = refractionPipe.get(x, y);
-		return [x + refractX, y + refractYY];
-	}).crop(cursorX, cursorY, cursorPipe.width, cursorPipe.height);
+		return [x + refractX, y + refractY];
+	}).crop(cursorX, cursorY, cursorCanvas.width, cursorCanvas.height);
 	// draw it on a canvas
-	return renderRGBAPipeToCanvas(cursorPipe);
+	renderRGBAPipe(cursorCanvas);
 }
 ```
 Pipe2D is not limited to graphics. We can just as easily apply such transformation to anything that's addressable in two dimensions:
 
 ```ts
-// grid.data: number[x][y]
-const dataPipe = Pipe2D.fromColumns(grid.data, grid.width, grid.height, -1); // Pipe2D<number>
+import { Pipe2D } from "@xtia/pipe2d";
+
+// create a pipe to read from a 2D array (number[x][y])
+const dataPipe = Pipe2D.fromColumns(gridData, gridWidth, gridHeight); // Pipe2D<number>
 const flipped = dataPipe.horizontalFlip(); // Pipe2D<number>
 const rotated = flipped.rotate("right"); // rotated.width == dataPipe.height &v/v
-// maybe the numbers in grid.data are indices for a Thing array?
+// maybe the numbers in the array are indices for a Thing array?
 const thingPipe = dataPipe.map(
 	idx => things[idx],
 ); // Pipe2D<Thing>
@@ -51,17 +56,20 @@ const thingPipe = dataPipe.map(
 const specificThing = thingPipe.get(13, 37);
 
 // let's visualise our nice new Thing grid with a heatmap of thing.score:
-const heatMap = thingPipe.map(
-	thing => [(thing.score / maxScore) * 255, 0, 0, 255] as RGBA
+
+import { RGBA } from "@xtia/rgba";
+
+const heatMap = thingPipe.floorCoordinates().map(
+	thing => new RGBA((255, 0, 0, thing.score / maxScore) * 255)
 ); // Pipe2D<RGBA>
 
 // stretched and rendered to a canvas:
-renderRGBAPipeToCanvas(heatMap.stretch(
-	heatmapCanvas.width,
-	heatmapCanvas.height
-), heatmapCanvas);
+
+import { renderRGBAPipe } from "@xtia/pipe2d-image";
+
+renderRGBAPipe(heatMap, heatmapCanvas);
 ```
-This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` will, for each pixel on the target canvas, read (x, y) from the `stretchPipe`, which will read an adjusted (x, y) from `heatMap`, which will read (x, y) from `thingPipe`, which will read (x, y) from `dataPipe`, which will `floor()` x and y and read and return the corresponding data from `grid.data`. `thingPipe` will read and return from `things` using that data as an index, `heatMap` will create and return pixel data using that `Thing`'s `score`, `stretchPipe` will return that and `renderRGBAPipeToCanvas()` will draw it where it belongs.
+This is the process that the above code simplifies: `renderRGBAPipe()` will, for each pixel on the target canvas, read (x, y) from the `stretch` pipe, which will read an adjusted (x, y) from `heatMap`, which will read (x, y) from `thingPipe`, which will read (x, y) from `dataPipe`, which will `floor()` x and y and read and return the corresponding data from `grid.data`. `thingPipe` will read and return from `things` using that data as an index, `heatMap` will create and return pixel data using that `Thing`'s `score`, `stretch` pipe will return that and `renderRGBAPipe()` will draw it where it belongs.
 
 ## Properties
 
@@ -90,6 +98,7 @@ This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` w
 * `interpolateAs(resolver)`
 * `roundCoordinates()` / `floorCoordinates()` creates a pipe that rounds/floors coordinates before reading the parent
 * `oob(value)` creates a pipe that reads the parent at valid coordinates, and returns `value` for coordinates outside of its dimensions
+* `stash()` gets and stores values at every integral location in the pipe and creates a pipe to access those
 
 ## Static Methods
 
@@ -99,10 +108,3 @@ This is the process that the above code simplifies: `renderRGBAPipeToCanvas()` w
 * `fromFlatArrayXY(source)` creates a pipe that reads from a flat array with [[0,0],[1,0],...] (horizontal stripes) layout
 * `fromFlatArrayYX(source)` creates a pipe that reads from a flat array with [[0,0],[0,1],...] (vertical stripes) layout
 * `stack(sources, fallback?)` creates a pipe that reads from the last source (`{x, y, pipe}`) that intersects given coordinates
-
-## Working With Images
-
-* `createImagePipe(source, options?)` creates a pipe that samples an image (`HTMLCanvasElement | HTMLImageElement | OffscreenCanvas | ImageData | Pipe2D<RGBA>` or 2D rendering context)
-* `async createImagePipe(url, options?)` loads an image from a URL and creates a a pipe that samples it
-* `renderRGBAPipeToCanvas(rgbaPipe, target?[, x, y[, dw, dh]])` renders a Pipe2D<RGBA> to a canvas/canvas context/imageData. If no target is specified, the function will create a canvas with the pipes dimesions, render to it and return it
-

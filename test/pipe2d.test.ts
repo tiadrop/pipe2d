@@ -1,4 +1,4 @@
-import { Pipe2D } from '../lib/Pipe2D';
+import { Pipe2D } from '../lib/index';
 
 describe('Pipe2D', () => {
     let pipe: Pipe2D<number>;

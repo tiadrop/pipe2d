@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "2D transform pipeline",
   "name": "pipe2d",
   "scripts": {
@@ -7,8 +7,7 @@
     "test": "npx jest"
   },
   "dependencies": {
-    "@xtia/live-array": "^1.0.2",
-    "@xtia/mezr": "^0.1.2"
+    "@xtia/live-array": "^1.0.2"
   },
   "devDependencies": {
     "@swc/jest": "^0.2.36",
