@@ -104,7 +104,7 @@ This is the process that the above code simplifies: `renderRGBAPipe()` will, for
 
 * `solid(value, width?, height?)` creates a pipe that returns `value` for any read
 * `fromColumns(source, height, fallback?)` creates a pipe that reads from a 2D array arranged in columns
-* `fromRows(source, height, fallback?)` creates a pipe that reads from a 2D array arranged in rows
+* `fromRows(source, width, fallback?)` creates a pipe that reads from a 2D array arranged in rows
 * `fromFlatArrayXY(source)` creates a pipe that reads from a flat array with [[0,0],[1,0],...] (horizontal stripes) layout
 * `fromFlatArrayYX(source)` creates a pipe that reads from a flat array with [[0,0],[0,1],...] (vertical stripes) layout
 * `stack(sources, fallback?)` creates a pipe that reads from the last source (`{x, y, pipe}`) that intersects given coordinates
